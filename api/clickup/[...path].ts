@@ -23,7 +23,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const token = process.env.CLICKUP_API_TOKEN;
 
+    console.log(`[ClickUp API] Request: ${req.method} ${url}`);
+    console.log(`[ClickUp API] Token present: ${!!token}`);
+
     if (!token) {
+        console.error('[ClickUp API] Error: Token missing');
         return res.status(500).json({ 
             error: 'ClickUp API token not configured',
             message: 'Please set CLICKUP_API_TOKEN environment variable in Vercel project settings.'
@@ -40,10 +44,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             body: (req.method !== 'GET' && req.method !== 'HEAD' && req.body) ? JSON.stringify(req.body) : undefined
         });
 
+        console.log(`[ClickUp API] Response status: ${response.status}`);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`[ClickUp API] Error response: ${errorText}`);
+            return res.status(response.status).json({ error: 'ClickUp API Error', details: errorText });
+        }
+
         const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
-        console.error('ClickUp API Error:', error);
-        res.status(500).json({ error: 'Failed to fetch from ClickUp' });
+        console.error('[ClickUp API] Network Error:', error);
+        res.status(500).json({ error: 'Failed to fetch from ClickUp', details: String(error) });
     }
 }

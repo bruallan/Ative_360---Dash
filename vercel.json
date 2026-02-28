@@ -2,8 +2,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/clickup/:path*",
-      "destination": "/api/clickup/:path*"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
       "source": "/(.*)",
