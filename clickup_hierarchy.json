@@ -1,0 +1,149 @@
+{
+  "Ative 360": {
+    "id": "9013412527",
+    "spaces": {
+      "01. GESTÃO": {
+        "id": "90133571157",
+        "folders": {},
+        "lists": {
+          "ADM - Carteira de Clientes": "901317238355",
+          "FIN - Custos da Empresa": "901325336879",
+          "ADM - Contratos dos Colaboradores": "901325336745",
+          "FIN - Salários": "901325335326",
+          "FIN - Controle de Inadimplência": "901325337255",
+          "ADM - Equipe Ative": "901309104155",
+          "ADM - Contratos dos Clientes": "901309103932"
+        }
+      },
+      "02. OPERAÇÃO": {
+        "id": "901310539280",
+        "folders": {
+          "ACCOUNT MANAGER": {
+            "id": "901317092762",
+            "lists": {
+              "ACC - Reuniões e Pesquisas": "901325396277",
+              "ACC - Filtro de Demandas": "901325406670",
+              "ACC - Operação Macro": "901321759270"
+            }
+          },
+          "GERAL": {
+            "id": "901317092722",
+            "lists": {
+              "Tickets": "901319991966",
+              "DSN - Ative Conecta": "901325399296",
+              "Configuração de TV": "901325398367",
+              "Ação Mateórica": "901325415661"
+            }
+          },
+          "CLIENTES MACRO": {
+            "id": "901317092786",
+            "lists": {
+              "Macro | Botopremium": "901325400028",
+              "Macro | Odontopremium": "901320450938",
+              "Macro | LocMoto": "901322348504",
+              "Carnaval Sem filtro | Campanha BP 2026": "901323473947",
+              "Mês da Mulher | Campanha BP 2026": "901324903893"
+            }
+          },
+          "GESTÃO DE TRÁFEGO": {
+            "id": "901317092858",
+            "lists": {
+              "GT - Gestão de Tráfego": "901325396593",
+              "GT - Configuração de Looker": "901325396737",
+              "DSN - Cards de Tráfego": "901309336244",
+              "AUD - Vídeos de Tráfego": "901309336243"
+            }
+          },
+          "GESTÃO DE CONTEÚDO": {
+            "id": "901317092873",
+            "lists": {
+              "GC - Planejamentos de Conteúdo": "901325396066",
+              "GC - Gestão de Conteúdo": "901325396120",
+              "DSN - Cards do Orgânico": "901309242986",
+              "AUD - Vídeos do Orgânico": "901309243034",
+              "B2B - YouTube": "901310477554",
+              "B2B - Podcast": "901310481320"
+            }
+          }
+        },
+        "lists": {}
+      },
+      "06. Campanhas Macro": {
+        "id": "90133580432",
+        "folders": {},
+        "lists": {}
+      },
+      "07. Banco de Conteúdo": {
+        "id": "90133670138",
+        "folders": {},
+        "lists": {
+          "Conteúdos | Cards": "901309246053",
+          "Criativos | Dinâmicos": "901309246008",
+          "Conteúdos | Vídeos": "901309246069",
+          "IDVs | Entregues": "901309246192",
+          "Criativos | Estáticos": "901309245991",
+          "Mídia OFF | Entregues": "901309246172",
+          "Roteiros ": "901309633243"
+        }
+      },
+      "08. Arquivados": {
+        "id": "90133667554",
+        "folders": {
+          "Briefings": {
+            "id": "90133687284",
+            "lists": {
+              "Briefing 1 (Novos Clientes)": "901306755248",
+              "Briefing 2 Tráfego Pago": "901306803144",
+              "Briefing 2 Gestão de Conteúdo": "901306829293",
+              "NPS - Tráfego + Conteúdo": "901309776134",
+              "NPS - Tráfego Pago": "901309779878",
+              "NPS - Gestão de Conteúdo": "901317701424"
+            }
+          }
+        },
+        "lists": {
+          "Orgânico | Audiovisual B (Raquel)": "901309336234",
+          "Gestão de Tarefas": "901319991829",
+          "Quiet Beauty | Campanha": "901307034874",
+          "Orgânico | Design B (Raquel)": "901309336233",
+          "Growth | Audiovisual A (Alexandre)": "901309242891",
+          "Tarefas Raquel": "901314120597",
+          "Orgânico | Gestão A (Camila)": "901309242967",
+          "Growth | Gestão A (Alexandre)": "901309242857",
+          "Mídias OFF A": "901309250819",
+          "Gestão de Tarefas - Squad Expansão": "901313717532",
+          "Mídias OFF B": "901309336241",
+          "Documentos Ative 360": "901315570001",
+          "Sites e Landing Pages": "901310482301",
+          "Orgânico | Gestão B (Raquel)": "901309336242",
+          "Ative Conecta": "901309241168",
+          "Customer Success | Squad A": "901309242813",
+          "Customer Success | Squad B": "901309336235",
+          "Tarefas Camila": "901314192122",
+          "Instagram Expansão (Isadora)": "901315884116",
+          "Account Manager | Squad B": "901309336218",
+          "Growth | Gestão B (Nicollas)": "901309336240",
+          "Ative Start": "901309241284",
+          "Growth | Design A (Alexandre)": "901309242881",
+          "Glow Up | Campanha": "901316656066",
+          "Jóias da Beleza | Campanha": "901320307371",
+          "Matheus": "901314059089",
+          "Meteóricos": "901309241194",
+          "Account Manager | Squad A": "901309242770"
+        }
+      }
+    }
+  },
+  "Nerispace": {
+    "id": "9013467434",
+    "spaces": {
+      "Finanças Pessoais": {
+        "id": "90132007901",
+        "folders": {},
+        "lists": {
+          "Minhas Finanças": "901306714461"
+        }
+      }
+    }
+  }
+}
