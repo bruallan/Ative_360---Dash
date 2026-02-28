@@ -25,8 +25,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
             <div className={`nav-item ${activeTab === 'account' ? 'active' : ''}`} onClick={() => setActiveTab('account')}>
                 <i className="fa-solid fa-handshake"></i> Account
             </div>
+
             <div className={`nav-item ${activeTab === 'trafego' ? 'active' : ''}`} onClick={() => setActiveTab('trafego')}>
                 <i className="fa-solid fa-arrow-trend-up"></i> Tráfego
+            </div>
+            <div className="nav-section-title">Gestão</div>
+            <div className={`nav-item ${activeTab === 'equipe' ? 'active' : ''}`} onClick={() => setActiveTab('equipe')}>
+                <i className="fa-solid fa-users-gear"></i> Equipe
+            </div>
+            <div className={`nav-item ${activeTab === 'pastas' ? 'active' : ''}`} onClick={() => setActiveTab('pastas')}>
+                <i className="fa-solid fa-folder-tree"></i> Pastas
+            </div>
+            <div className={`nav-item ${activeTab === 'tarefas' ? 'active' : ''}`} onClick={() => setActiveTab('tarefas')}>
+                <i className="fa-solid fa-list-check"></i> Tarefas
             </div>
             <div className="nav-section-title">Sistema</div>
             <div className={`nav-item ${activeTab === 'debug' ? 'active' : ''}`} onClick={() => setActiveTab('debug')}>

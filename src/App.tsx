@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import Layout from './components/Layout';
 import ExecutiveView from './pages/ExecutiveView';
@@ -7,6 +8,9 @@ import TeamPerformance from './pages/TeamPerformance';
 import AccountManager from './pages/AccountManager';
 import TrafficManagement from './pages/TrafficManagement';
 import DebugPage from './pages/DebugPage';
+import TeamPage from './pages/TeamPage';
+import StructurePage from './pages/StructurePage';
+import AllTasksPage from './pages/AllTasksPage';
 import './index.css';
 
 const App: React.FC = () => {
@@ -24,6 +28,12 @@ const App: React.FC = () => {
                 return <AccountManager />;
             case 'trafego':
                 return <TrafficManagement />;
+            case 'equipe':
+                return <TeamPage />;
+            case 'pastas':
+                return <StructurePage />;
+            case 'tarefas':
+                return <AllTasksPage />;
             case 'debug':
                 return <DebugPage />;
             default:
@@ -39,3 +49,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

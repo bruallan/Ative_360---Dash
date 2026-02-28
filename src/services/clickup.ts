@@ -235,6 +235,7 @@ export async function fetchAllOpenTasks(): Promise<ClickUpTask[]> {
  * Helper to extract "Cliente" custom field value from a task.
  * Matches Python guide Point 4 logic.
  */
+
 export function getClientNameFromTask(task: ClickUpTask): string | null {
     if (!task.custom_fields) return null;
 
@@ -252,4 +253,40 @@ export function getClientNameFromTask(task: ClickUpTask): string | null {
     // Handle text fields
     return String(clientField.value);
 }
+
+export async function fetchFullStructure(): Promise<any> {
+    try {
+        const response = await fetch('/api/debug-clickup-structure');
+        if (!response.ok) {
+            throw new Error('Failed to fetch structure');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching structure:', error);
+        return [];
+    }
+}
+
+export async function fetchAllWorkspaceTasks(): Promise<ClickUpTask[]> {
+    try {
+        // 1. Get Team ID
+        const teamsResponse = await fetch(`${API_BASE}/team`);
+        const teamsData = await teamsResponse.json();
+        if (!teamsData.teams || teamsData.teams.length === 0) {
+            throw new Error('No teams found');
+        }
+        const teamId = teamsData.teams[0].id;
+
+        // 2. Fetch all tasks for the team
+        // We use the team-level task endpoint which supports filtering across the entire workspace
+        return await fetchPaginatedTasks(`/team/${teamId}/task`, {
+            subtasks: true,
+            include_closed: true
+        });
+    } catch (error) {
+        console.error('Error fetching all workspace tasks:', error);
+        return [];
+    }
+}
+
 
