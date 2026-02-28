@@ -6,6 +6,7 @@ import ClientView from './pages/ClientView';
 import TeamPerformance from './pages/TeamPerformance';
 import AccountManager from './pages/AccountManager';
 import TrafficManagement from './pages/TrafficManagement';
+import DebugPage from './pages/DebugPage';
 import './index.css';
 
 const App: React.FC = () => {
@@ -23,6 +24,8 @@ const App: React.FC = () => {
                 return <AccountManager />;
             case 'trafego':
                 return <TrafficManagement />;
+            case 'debug':
+                return <DebugPage />;
             default:
                 return <ExecutiveView />;
         }
