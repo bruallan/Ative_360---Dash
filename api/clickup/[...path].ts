@@ -2,9 +2,10 @@
 
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import fetch from 'node-fetch';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    console.log('[ClickUp API] Function invoked');
+    
     const { path } = req.query;
     
     let targetPath = '';
@@ -14,11 +15,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         targetPath = (path as string) || '';
     }
 
-    // Reconstruct query string excluding 'path'
-    const queryParams = new URLSearchParams(req.query as any);
-    queryParams.delete('path');
-    const queryString = queryParams.toString();
+    console.log(`[ClickUp API] Target Path: ${targetPath}`);
 
+    // Reconstruct query string excluding 'path'
+    const queryParams = new URLSearchParams();
+    Object.entries(req.query).forEach(([key, value]) => {
+        if (key === 'path') return;
+        if (Array.isArray(value)) {
+            value.forEach(v => queryParams.append(key, v));
+        } else {
+            queryParams.append(key, value as string);
+        }
+    });
+    
+    const queryString = queryParams.toString();
     const url = `https://api.clickup.com/api/v2/${targetPath}${queryString ? `?${queryString}` : ''}`;
 
     const token = process.env.CLICKUP_API_TOKEN;

@@ -20,6 +20,90 @@ async function startServer() {
 
 
   // ClickUp Proxy
+  app.get("/api/debug-clickup", async (req, res) => {
+    const token = process.env.CLICKUP_API_TOKEN;
+    const maskedToken = token ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}` : "MISSING";
+    
+    console.log(`[Debug] Token: ${maskedToken}`);
+    
+    try {
+      const response = await fetch("https://api.clickup.com/api/v2/user", {
+        headers: { "Authorization": token || "" }
+      });
+      const data = await response.json();
+      res.json({ 
+        tokenStatus: maskedToken, 
+        clickupStatus: response.status, 
+        userData: data 
+      });
+    } catch (error) {
+      res.status(500).json({ error: String(error) });
+    }
+  });
+
+  // ClickUp Structure Debug
+  app.get("/api/debug-clickup-structure", async (req, res) => {
+    const token = process.env.CLICKUP_API_TOKEN;
+    if (!token) return res.status(500).json({ error: "No token" });
+
+    const headers = { "Authorization": token };
+    const baseUrl = "https://api.clickup.com/api/v2";
+
+    try {
+        // 1. Get Teams
+        const teamsRes = await fetch(`${baseUrl}/team`, { headers });
+        const teamsData = await teamsRes.json();
+        const teams = teamsData.teams || [];
+
+        const structure: any[] = [];
+
+        for (const team of teams) {
+            const teamData: any = { id: team.id, name: team.name, spaces: [] };
+            
+            // 2. Get Spaces
+            const spacesRes = await fetch(`${baseUrl}/team/${team.id}/space?archived=false`, { headers });
+            const spacesData = await spacesRes.json();
+            const spaces = spacesData.spaces || [];
+
+            for (const space of spaces) {
+                const spaceData: any = { id: space.id, name: space.name, folders: [], lists: [] };
+
+                // 3. Get Folders
+                const foldersRes = await fetch(`${baseUrl}/space/${space.id}/folder?archived=false`, { headers });
+                const foldersData = await foldersRes.json();
+                const folders = foldersData.folders || [];
+
+                for (const folder of folders) {
+                    const folderData: any = { id: folder.id, name: folder.name, lists: [] };
+                    
+                    // 4. Get Lists in Folder
+                    const listsRes = await fetch(`${baseUrl}/folder/${folder.id}/list?archived=false`, { headers });
+                    const listsData = await listsRes.json();
+                    const lists = listsData.lists || [];
+                    
+                    folderData.lists = lists.map((l: any) => ({ id: l.id, name: l.name }));
+                    spaceData.folders.push(folderData);
+                }
+
+                // 5. Get Folderless Lists in Space
+                const folderlessListsRes = await fetch(`${baseUrl}/space/${space.id}/list?archived=false`, { headers });
+                const folderlessListsData = await folderlessListsRes.json();
+                const folderlessLists = folderlessListsData.lists || [];
+                
+                spaceData.lists = folderlessLists.map((l: any) => ({ id: l.id, name: l.name }));
+                
+                teamData.spaces.push(spaceData);
+            }
+            structure.push(teamData);
+        }
+
+        res.json(structure);
+
+    } catch (error) {
+        res.status(500).json({ error: String(error) });
+    }
+  });
+
   app.use("/api/clickup", async (req, res) => {
     const token = process.env.CLICKUP_API_TOKEN;
     const url = `https://api.clickup.com/api/v2${req.url}`;
