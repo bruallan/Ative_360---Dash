@@ -135,6 +135,58 @@ async function startServer() {
     }
   });
 
+  // ClickUp Tasks Debug
+  app.get("/api/debug-clickup-tasks", async (req, res) => {
+    const token = process.env.CLICKUP_API_TOKEN;
+    const listId = (req.query.listId as string) || '901321759270'; // Default to ACC - Operação Macro
+
+    if (!token) {
+        return res.status(500).json({ error: "Token missing" });
+    }
+
+    try {
+        console.log(`[Debug Tasks] Fetching tasks for list ${listId}...`);
+        
+        // Fetch tasks with subtasks and closed tasks included
+        const url = `https://api.clickup.com/api/v2/list/${listId}/task?subtasks=true&include_closed=true&page=0`;
+        
+        const response = await fetch(url, {
+            headers: { 
+                "Authorization": token,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error(`[Debug Tasks] Failed: ${response.status} - ${text}`);
+            return res.status(response.status).json({ error: "Failed to fetch tasks", details: text });
+        }
+
+        const data = await response.json();
+        const tasks = data.tasks || [];
+
+        // Return a simplified view of tasks for debugging
+        const simplifiedTasks = tasks.map((t: any) => ({
+            id: t.id,
+            name: t.name,
+            status: t.status.status,
+            assignees: t.assignees.map((a: any) => ({ id: a.id, username: a.username })),
+            custom_fields: t.custom_fields.map((f: any) => ({ name: f.name, value: f.value, type: f.type }))
+        }));
+
+        res.json({ 
+            count: tasks.length, 
+            sample_tasks: simplifiedTasks.slice(0, 5), // First 5 tasks
+            all_raw_tasks: tasks.slice(0, 2) // First 2 raw tasks for deep inspection
+        });
+
+    } catch (error) {
+        console.error("[Debug Tasks] Error:", error);
+        res.status(500).json({ error: String(error) });
+    }
+  });
+
   app.use("/api/clickup", async (req, res) => {
     const token = process.env.CLICKUP_API_TOKEN;
     
