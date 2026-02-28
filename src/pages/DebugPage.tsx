@@ -11,17 +11,31 @@ const DebugPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const healthRes = await fetch('/api/health');
-                const healthData = await healthRes.json().catch(e => ({ error: 'Failed to parse JSON', details: String(e) }));
+                
+                // Helper to fetch and parse
+                const fetchJson = async (url: string) => {
+                    try {
+                        const res = await fetch(url);
+                        const text = await res.text();
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            return { error: 'Failed to parse JSON', rawResponse: text.substring(0, 500) }; // Limit length
+                        }
+                    } catch (e) {
+                        return { error: 'Network Error', details: String(e) };
+                    }
+                };
+
+                const healthData = await fetchJson('/api/health');
                 setHealth(healthData);
 
-                const debugRes = await fetch('/api/debug-clickup');
-                const debugData = await debugRes.json().catch(e => ({ error: 'Failed to parse JSON', details: String(e) }));
+                const debugData = await fetchJson('/api/debug-clickup');
                 setDebugClickup(debugData);
 
-                const structureRes = await fetch('/api/debug-clickup-structure');
-                const structureData = await structureRes.json().catch(e => ({ error: 'Failed to parse JSON', details: String(e) }));
+                const structureData = await fetchJson('/api/debug-clickup-structure');
                 setStructure(structureData);
+
             } catch (err) {
                 setError(String(err));
             } finally {

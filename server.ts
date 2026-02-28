@@ -3,6 +3,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
+import fetch from "node-fetch";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,9 +14,17 @@ async function startServer() {
   // Middleware to parse JSON
   app.use(express.json());
 
+  // Request logging middleware
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      console.log(`[API Request] ${req.method} ${req.path}`);
+    }
+    next();
+  });
+
   // API routes FIRST
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+    res.json({ status: "ok", env: { NODE_ENV: process.env.NODE_ENV, HAS_CLICKUP_TOKEN: !!process.env.CLICKUP_API_TOKEN } });
   });
 
 
@@ -52,7 +61,7 @@ async function startServer() {
     try {
         // 1. Get Teams
         const teamsRes = await fetch(`${baseUrl}/team`, { headers });
-        const teamsData = await teamsRes.json();
+        const teamsData = await teamsRes.json() as any;
         const teams = teamsData.teams || [];
 
         const structure: any[] = [];
@@ -62,7 +71,7 @@ async function startServer() {
             
             // 2. Get Spaces
             const spacesRes = await fetch(`${baseUrl}/team/${team.id}/space?archived=false`, { headers });
-            const spacesData = await spacesRes.json();
+            const spacesData = await spacesRes.json() as any;
             const spaces = spacesData.spaces || [];
 
             for (const space of spaces) {
@@ -70,7 +79,7 @@ async function startServer() {
 
                 // 3. Get Folders
                 const foldersRes = await fetch(`${baseUrl}/space/${space.id}/folder?archived=false`, { headers });
-                const foldersData = await foldersRes.json();
+                const foldersData = await foldersRes.json() as any;
                 const folders = foldersData.folders || [];
 
                 for (const folder of folders) {
@@ -78,7 +87,7 @@ async function startServer() {
                     
                     // 4. Get Lists in Folder
                     const listsRes = await fetch(`${baseUrl}/folder/${folder.id}/list?archived=false`, { headers });
-                    const listsData = await listsRes.json();
+                    const listsData = await listsRes.json() as any;
                     const lists = listsData.lists || [];
                     
                     folderData.lists = lists.map((l: any) => ({ id: l.id, name: l.name }));
@@ -87,7 +96,7 @@ async function startServer() {
 
                 // 5. Get Folderless Lists in Space
                 const folderlessListsRes = await fetch(`${baseUrl}/space/${space.id}/list?archived=false`, { headers });
-                const folderlessListsData = await folderlessListsRes.json();
+                const folderlessListsData = await folderlessListsRes.json() as any;
                 const folderlessLists = folderlessListsData.lists || [];
                 
                 spaceData.lists = folderlessLists.map((l: any) => ({ id: l.id, name: l.name }));
@@ -146,6 +155,12 @@ async function startServer() {
       console.error("[ClickUp Proxy] Network Error:", error);
       res.status(500).json({ error: "Failed to fetch from ClickUp", details: String(error) });
     }
+  });
+
+  // Catch-all for API routes to prevent falling through to frontend
+  app.all("/api/*", (req, res) => {
+    console.log(`[API 404] Route not found: ${req.method} ${req.path}`);
+    res.status(404).json({ error: "API route not found", path: req.path });
   });
 
   // Vite middleware for development
