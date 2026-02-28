@@ -22,14 +22,16 @@ async function startServer() {
   // ClickUp Proxy
   app.use("/api/clickup", async (req, res) => {
     const token = process.env.CLICKUP_API_TOKEN;
+    const url = `https://api.clickup.com/api/v2${req.url}`;
+
+    console.log(`[ClickUp API] Request: ${req.method} ${url}`);
+    console.log(`[ClickUp API] Token present: ${!!token}`);
+
     if (!token) {
+      console.error('[ClickUp API] Error: Token missing');
       return res.status(500).json({ error: "ClickUp API token not configured" });
     }
 
-    // req.url here is relative to the mount point /api/clickup
-    // e.g. /list/123/task
-    const url = `https://api.clickup.com/api/v2${req.url}`;
-    
     try {
       const response = await fetch(url, {
         method: req.method,
@@ -40,11 +42,19 @@ async function startServer() {
         body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined
       });
 
+      console.log(`[ClickUp API] Response status: ${response.status}`);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[ClickUp API] Error response: ${errorText}`);
+        return res.status(response.status).json({ error: 'ClickUp API Error', details: errorText });
+      }
+
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
-      console.error("ClickUp API Error:", error);
-      res.status(500).json({ error: "Failed to fetch from ClickUp" });
+      console.error("[ClickUp API] Network Error:", error);
+      res.status(500).json({ error: "Failed to fetch from ClickUp", details: String(error) });
     }
   });
 

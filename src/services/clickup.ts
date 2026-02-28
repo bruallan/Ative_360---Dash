@@ -67,7 +67,8 @@ export interface ClickUpTeam {
  * Helper to fetch all tasks with pagination (The "Sync" Logic)
  * Matches the Python guide's "Sistema Completo: Paginação"
  */
-async function fetchPaginatedTasks(endpoint: string, params: Record<string, string | number | boolean> = {}): Promise<ClickUpTask[]> {
+export async function fetchPaginatedTasks(endpoint: string, params: Record<string, string | number | boolean> = {}): Promise<ClickUpTask[]> {
+    console.log(`[Frontend] Fetching paginated tasks from: ${endpoint}`, params);
     let allTasks: ClickUpTask[] = [];
     let page = 0;
     let hasMore = true;
